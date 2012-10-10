@@ -18,7 +18,7 @@ var defaultBlackList = [
 
 
 
-var dependParser = function(source,callback,_config){
+var dependParser = function(){
     this.depends = {};
     //带有系统模块的依赖列表
     this.requireList = [];
@@ -93,7 +93,7 @@ module.exports = exports =function(source,callback,_config){
     var dp = new dependParser();
     dp.source = source;
     dp.callback = callback;
-    underscore.extend(dp.config,_config);
+    _config&&underscore.extend(dp.config,_config);
     dp.load();
 
 }
