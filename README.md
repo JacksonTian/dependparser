@@ -7,3 +7,30 @@
 
 ## 求谁来帮忙实现
 哥太忙了。求对Node感兴趣的人来帮忙实现下。可以玩玩分析文本文件。项目完成后，**奖励两本图灵社区的书**。
+
+##安装
+
+```
+npm install dependparser
+```
+
+##使用
+
+```
+var dp=require("dependparser")
+//第一个参数为项目路径，最后跟上斜线。
+//第二个参数为回调方法，其第一个参数是最后获取的依赖的对象，第二个参数如果出错则是一个Error实例。
+//第三个参数是配置参数，目前支持blackList（黑名单数组），showError(请求错误是否在控制台显示错误信息）
+dp(process.cwd(),function(result,error){
+    if(!error){
+        console.log(result)
+    }
+},{
+    blackList:[
+        "test.js",
+        "example/*"
+    ],
+    showError:true
+});
+
+```
