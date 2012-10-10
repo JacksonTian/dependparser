@@ -31,7 +31,7 @@ var dependParser = function(source){
         return;
     }
     walker(source,function(f,next,context){
-        if(/\.js$/.test(f)){
+        if(/\.js$/.test(f)&&!/node_modules/.test(f)){
             parseJsFile(f,next,context)
         }
         next.call(context)
