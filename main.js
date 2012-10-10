@@ -48,12 +48,15 @@ var dependParser=function(source){
         }
         next.call(context)
     },function(){
+        //去重
         requireList=uniq(requireList)
+        //过滤掉系统模块
         requireList.forEach(function(i){
             if(sysList.indexOf(i)==-1){
                 dependList.push(i)
             }
         })
+        //一次处理依赖列表里的模块，用npm info 请求其信息并解析
         queue_do(dependList,function(_mod,next,context){
             depends[_mod]=""
             console.log("request "+_mod+"'s info")
