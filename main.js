@@ -1,6 +1,8 @@
 
 var walker = require("walkdo")
 var queue_do = require("queuedo")
+var underscore=require("underscore")
+
 var fs = require("fs")
 //带有系统模块的依赖列表
 var requireList = []
@@ -9,7 +11,6 @@ var dependList = []
 var depends = {
     
 }
-var packageInfo;
 var reg = new RegExp("require\\([\"']([^./]*?)[\"']\\)","g")
 //系统模块，take from http://nodejs.org/api/index.json
 var sysList = [ "synopsis", "assert", "buffer", "addons", "child_process", "cluster", "crypto", "debugger", "dns", "domain", "events", "fs", "globals", "http", "https", "modules", "net", "os", "path", "process", "punycode", "querystring", "readline", "repl", "stdio", "stream", "string_decoder", "timers", "tls", "tty", "dgram", "url", "util", "vm", "zlib"]
@@ -23,25 +24,12 @@ var parseJsFile = function(_file,next,context){
         requireList.push(match[1])
     }
 }
-//去重
-var uniq = function(arr){
-    var newArray = []; 
-    var provisionalTable  =  {};
-    for (var i  =  0, item; (item =  arr[i]) !=  null; i++) {
-        if (!provisionalTable[item]) {
-            newArray.push(item);
-            provisionalTable[item]  =  true;
-        }
-    }
-    return newArray;
-};
 
 var dependParser = function(source){
     if(!fs.existsSync(source+"/package.json")){
         console.log("package.json not found! broken!")
         return;
     }
-    packageInfo = JSON.parse(fs.readFileSync(source+"/package.json"))
     walker(source,function(f,next,context){
         if(/\.js$/.test(f)){
             parseJsFile(f,next,context)
@@ -49,7 +37,7 @@ var dependParser = function(source){
         next.call(context)
     },function(){
         //去重
-        requireList = uniq(requireList)
+        requireList = underscore.uniq(requireList)
         //过滤掉系统模块
         requireList.forEach(function(i){
             if(sysList.indexOf(i) == -1){
