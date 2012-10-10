@@ -1,4 +1,4 @@
-var dp = require("./main.js");
+var dp = require("dependparser");
 dp(process.cwd(),function(result,error){
     if(!error){
         console.log(result)

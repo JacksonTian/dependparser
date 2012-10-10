@@ -64,13 +64,16 @@ dependParser.prototype = {
                 exec("npm info "+_mod,function(err,out,stderr){
                     if(err){
                         self.config.showError&&console.log("dependparser: child_process exec error！");
-                    }else
-                    if(stderr){
-                        self.config.showError&&console.log("dependparser: child_process exec stderr");
-                        self.config.showError&&console.log(stderr);
                     }else{
+                        var nameMatch = out.match(nameReg)
+                        var versionMatch = out.match(versionReg)
+                        if(nameMatch&&versionMatch){
+                            self.depends[nameMatch[1]] = versionMatch[1];
+                        }else{
+                            self.config.showError&&console.log("dependparser: child_process exec request error！");
+                            self.config.showError&&console.log(out)
+                        }
                         
-                        self.depends[out.match(nameReg)[1]] = out.match(versionReg)[1];
                     }
                     next.call(context);
                 });
