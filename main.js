@@ -46,7 +46,7 @@ var dependParser = function(source){
         })
         //一次处理依赖列表里的模块，用npm info 请求其信息并解析
         queue_do(dependList,function(_mod,next,context){
-            depends[_mod] = ""
+            depends[_mod] = "*"
             console.log("request "+_mod+"'s info")
             var exec  =  require('child_process').exec,
             free   =  exec("npm info "+_mod,function(err,out,stderr){

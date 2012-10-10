@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。",
   "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/xinyu198736/dependparser"
