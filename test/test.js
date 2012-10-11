@@ -1,4 +1,4 @@
-var dp = require("dependparser");
+var dp = require("../");
 dp(process.cwd().replace(/test$/,""), function (result, error) {
     if(!error){
         console.log(result)
