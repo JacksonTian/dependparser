@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>dependparser Documentation</title>
+    <meta name="keywords" content="depend,parser" />
+    <meta name="description" content="项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。" />
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="base.css" />
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="./index.html">dependparser</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li>
+                <a href="./index.html">Home</a>
+              </li>
+              <li>
+                <a href="./api.html">API Docs</a>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header class="jumbotron subhead">
+      <div class="container">
+        <h1>dependparser <small>Version: 0.0.6 By @yutou</small></h1>
+        <p class="lead">
+          项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。
+        </p>
+      </div>
+    </header>
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <section>
+        <h1>自动依赖分析器</h1>
+
+<p>项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的<code>package.json</code>文件的dependencies和devDependencies属性。</p>
+
+<h2>实现思路</h2>
+
+<p>通过扫描目录中的js文件，正则表达式匹配require调用，提取出项目中require到的所有模块。并且排除掉Node的原生模块、文件模块，提取出依赖的第三方模块。并自动从NPM服务器上查看最新的版本以提供一个推荐的依赖列表。  </p>
+
+<h2>求谁来帮忙实现</h2>
+
+<p>哥太忙了。求对Node感兴趣的人来帮忙实现下。可以玩玩分析文本文件。项目完成后，<strong>奖励两本图灵社区的书</strong>。</p>
+
+<h2>安装</h2>
+
+<div class="highlight"><pre lang="">npm install dependparser
+</pre></div>
+
+<h2>使用</h2>
+
+<div class="highlight"><pre lang="">var dp=require("dependparser")
+//第一个参数为项目路径，最后跟上斜线。
+//第二个参数为回调方法，其第一个参数是最后获取的依赖的对象，第二个参数如果出错则是一个Error实例。
+//第三个参数是配置参数，目前支持blackList（黑名单数组），showError(请求错误是否在控制台显示错误信息）
+dp(process.cwd(),function(result,error){
+    if(!error){
+        console.log(result)
+    }
+},{
+    blackList:[
+        "test.js",
+        "example/*"
+    ],
+    showError:true
+});
+
+</pre></div>
+      </section>
+    </div>
+  </div>
+</div>
+      <footer class="footer">
+        <div class="container">
+          <p class="pull-right">
+            <a href="#">Back to top</a>
+          </p>
+          <p>此文档通过doxmate生成。主题借鉴Bootstrap API文档风格。欢迎关注doxmate作者<a href="http://weibo.com/shyvo" target="_blank">@朴灵</a></p>
+          <ul class="footer-links">
+            <li><a href="http://html5ify.com/doxmate">Doxmate主页</a></li>
+            <li><a href="https://github.com/JacksonTian/doxmate/issues?state=open">提交bug</a></li>
+          </ul>
+      </div>
+    </footer>
+  </body>
+</html>
