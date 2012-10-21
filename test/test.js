@@ -1,5 +1,5 @@
 var dp = require("dependparser");
-dp(process.cwd().replace(/test$/,""), function (result, error) {
+dp(process.cwd().replace(/test$/,""), function (error,result) {
     if(!error){
         console.log(result)
     }else{
