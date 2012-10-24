@@ -11,10 +11,14 @@
 ##安装
 
 ```
-npm install dependparser
+npm install dependparser -g
 ```
 
 ##使用
+
+```
+dependparser -i <project path>
+```
 
 ```
 var dp=require("dependparser")

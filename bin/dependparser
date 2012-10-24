@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander'),
+  fs = require('fs'),
+  path = require('path'),
+  colors = require('colors'),
+  _ = require('underscore'),
+  parser = require('../');
+
+// options
+program
+  .version(parser.version)
+  .option('-i, --input <folder>', 'where is the package.');
+
+// examples
+program.on('--help', function(){
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ dependparser -i <folder>');
+  console.log('');
+});
+
+// parse argv
+program.parse(process.argv);
+
+if (!program.input) {
+  console.log('$ dependparser -i <folder>');
+}
+
+// process stdin
+parser.process(path.resolve(program.input), {}, function (err, result) {
+  if (err) {
+    throw err;
+  }
+  if (result.actual.length !== result.expect.length) {
+    console.warn("Dependencies aren't matched".red);
+    console.log("Expect:");
+    console.log(result.expect.join(','));
+    console.log("Actual:");
+    console.log(result.actual.join(','));
+    if (result.actual.length > result.expect.length) {
+      console.log((_.difference(result.actual, result.expect).join(',') + " are unnecessary").green);
+    } else {
+      console.log((_.difference(result.expect, result.actual).join(',') + " are missed").green);
+    }
+  } else {
+    console.log("Congratulations! The dependencies are matched.".green);
+  }
+});
