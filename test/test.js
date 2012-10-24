@@ -11,12 +11,3 @@ dp(process.cwd().replace(/test$/,""), function (error,result) {
     ],
     showError:true
 });
-
-dp(process.cwd(), function (result, error) {
-    if (!error) {
-        console.log(result)
-    }
-},{
-    blackList:[
-    ]
-});
