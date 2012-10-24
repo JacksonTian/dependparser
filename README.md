@@ -21,7 +21,7 @@ var dp=require("dependparser")
 //第一个参数为项目路径，最后跟上斜线。
 //第二个参数为回调方法，其第一个参数是最后获取的依赖的对象，第二个参数如果出错则是一个Error实例。
 //第三个参数是配置参数，目前支持blackList（黑名单数组），showError(请求错误是否在控制台显示错误信息）
-dp(process.cwd(),function(result,error){
+dp(process.cwd(),function(error,result){
     if(!error){
         console.log(result)
     }

@@ -1,5 +1,5 @@
-var dp = require("../");
-dp(process.cwd().replace(/test$/,""), function (result, error) {
+var dp = require("../lib/index.js");
+dp(process.cwd().replace(/test$/,""), function (error,result) {
     if(!error){
         console.log(result)
     }else{
@@ -10,13 +10,4 @@ dp(process.cwd().replace(/test$/,""), function (result, error) {
         "test.js"
     ],
     showError:true
-});
-
-dp(process.cwd(), function (result, error) {
-    if (!error) {
-        console.log(result)
-    }
-},{
-    blackList:[
-    ]
 });
