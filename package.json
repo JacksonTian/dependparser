@@ -23,6 +23,7 @@
     "queuedo": ">=0.9.4",
     "underscore": ">=1.4.2",
     "commander": "*",
-    "colors": "*"
+    "colors": "*",
+    "urllib": "*"
   }
 }
