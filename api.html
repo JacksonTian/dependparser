@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>dependparser Documentation</title>
+    <meta name="keywords" content="depend,parser" />
+    <meta name="description" content="项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。" />
+    <script src="assets/prettify.js"></script>
+    <script src="assets/jquery-1.8.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/base.css" />
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="./index.html">dependparser</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+            
+              <li>
+                <a href="./api.html">API Docs</a>
+              </li>
+            
+            
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header class="jumbotron subhead">
+      <div class="container">
+        <h1>dependparser <small>Version: 0.0.7 By @yutou</small></h1>
+        <p class="lead">
+          项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。
+        </p>
+      </div>
+    </header>
+<div class="container content">
+  <div class="row">
+    <div class="span3 bs-docs-sidebar">
+      <ul class="nav nav-list bs-docs-sidenav affix">
+
+  <li>
+    <a href="#api_index"><i class="icon-chevron-right"></i>index</a>
+  </li>
+
+</ul>
+
+    </div>
+    <div class="span9">
+      
+        <section id="api_index" class="api">
+  <h2>index: API索引</h2>
+  <ul class="indexs">
+  
+    <li>
+      <a href="#exports_process">process</a>
+    </li>
+
+    <li>
+      <a href="#exports_version">version</a>
+    </li>
+
+  </ul>
+  <hr />
+
+  
+
+  <p>,<br />  "test/<em>",<br />  "doc/</em>"<br />];</p>
+
+<p>var DependParser = function (source, callback) {<br />  this.depends = {};<br />  //带有系统模块的依赖列表<br />  this.requireList = [];<br />  //最终的依赖列表<br />  this.dependList = [];<br />  this.config = {<br />    blackList : [],<br />    showError : true<br />  };<br />  this.source = source;<br />  this.callback = callback;<br />};</p>
+
+<p>DependParser.prototype.load = function () {<br />  var self = this;<br />  if (!fs.existsSync(path.join(self.source, "package.json"))) {<br />    this.callback(new Error("Not a project root, package.json not found!")) ;<br />    return;<br />  }</p>
+
+<p>var packageInfo = require(path.join(self.source, "package.json"));<br />  var blackList = defaultBlackList.concat(this.config.blackList);<br />  //加上前缀<br />  blackList.map(function (v, i) {<br />    return (self.source + "/" + v).replace(/\/\//g,"/");<br />  });</p>
+
+<p>var blackListReg = new RegExp(blackList.join("|").replace(/./g,"\.").replace(/\</p>
+
+  <table class="table">
+  
+
+  
+    <tr>
+      <td>代码</td><td colspan="3"><pre><code>,&quot;.*&quot;));
+  walker(this.source, function (file, next, context) {
+    var ext = path.extname(file);
+    if ((ext === '.js' || ext === '') &amp;&amp; !blackListReg.test(file)) {
+        self.parseFile(file);
+    }
+    next.call(context);
+  }, function () {
+    //去重
+    self.dependList = underscore.uniq(self.requireList)
+    // 过滤掉系统模块
+    .filter(function (i) {
+      return sysList.indexOf(i) === -1;
+    });
+    self.dependList.forEach(function (name) {
+      self.depends[name] = &quot;*&quot;;
+    });
+    if (!self.config.checkVersion) {
+      self.callback(null, {
+        expect: self.depends,
+        actual: packageInfo.dependencies || {}
+      });
+    } else {
+      // 一次处理依赖列表里的模块，用npm info请求其信息并解析
+      // http://registry.npmjs.org/dependparser 该用RESTfull接口调用，提升性能
+      queue_do(self.dependList, function (_mod, next, context) {
+        urllib.request('http://registry.npmjs.org/' + _mod, function (err, data, res) {
+          // TODO: err如何处理？
+          try {
+            var result = JSON.parse(data.toString());
+            self.depends[result.name] = result['dist-tags'].latest;
+          } catch (e) {
+            // TODO: 这里异常被吃掉了
+            // TODO: 思考下queue_do在迭代文件的时候，出了异常该如何传递
+            throw e;
+          }
+          next.call(context);
+        });
+      }, function () {
+          self.callback(null, {expect: self.depends, actual: packageInfo.dependencies || {}});
+      });
+    }
+  });
+};
+
+//解析文件
+// TODO: 添加过滤注释的功能，现在的方式会将注释中的require也一并解析，数据中会存在干扰。
+DependParser.prototype.parseFile = function (file) {
+  var text = fs.readFileSync(file).toString().replace(/\s/,&quot;&quot;);
+  var match;
+  while ((match = requireReg.exec(text))) {
+    this.requireList.push(match[1]);
+  }
+};</code></pre></td>
+    </tr>
+  
+  </table>
+  
+  
+  <h3 id="exports_process">
+    process
+  </h3>
+  
+
+  <p>分析依赖并返回结果</p>
+
+<h2>Examples</h2>
+
+<div class="highlight"><pre lang=""> var dp = require("dependparser");
+ dp.process(process.cwd().replace(/test$/,""), {
+   blackList:[
+     "test.js"
+   ],
+   showError:true
+ }, function (err, result) {
+   if (!error) {
+     console.log(result)
+   } else {
+     console.log(error)
+   }
+ });
+</pre></div>
+
+  <table class="table">
+  
+    <tr>
+      <td>方法</td>
+      <td>exports.process()</td> 
+      <td>exports</td>
+      <td>process</td>
+    </tr>
+  
+
+    <tr>
+      <td>参数</td>
+      <td>source(string)</td>
+      <td colspan="2">要分析的项目路径，最后跟上斜线。</td>
+    </tr>
+  
+
+    <tr>
+      <td>参数</td>
+      <td>_config(object)</td>
+      <td colspan="2">配置参数，目前支持blackList（黑名单数组），showError(请求错误是否在控制台显示错误信息）</td>
+    </tr>
+  
+
+    <tr>
+      <td>参数</td>
+      <td>callback(function)</td>
+      <td colspan="2">回调方法，第一个参数如果出错则是一个Error实例，其第二个参数是最后获取的依赖的对象。</td>
+    </tr>
+  
+
+  
+    <tr>
+      <td>代码</td><td colspan="3"><pre><code>exports.process = function (source, _config, callback) {
+  if (!callback) {
+    callback = _config;
+    _config = {};
+  }
+  var dp = new DependParser(source, callback);
+  underscore.extend(dp.config, _config);
+  dp.load();
+};</code></pre></td>
+    </tr>
+  
+  </table>
+  
+  
+  <h3 id="exports_version">
+    version
+  </h3>
+  
+
+  <p>版本</p>
+
+  <table class="table">
+  
+    <tr>
+      <td>属性</td>
+      <td>exports.version</td> 
+      <td>exports</td>
+      <td>version</td>
+    </tr>
+  
+
+  
+    <tr>
+      <td>代码</td><td colspan="3"><pre><code>exports.version = require('../package.json').version;</code></pre></td>
+    </tr>
+  
+  </table>
+  
+</section>
+      
+    </div>
+  </div>
+</div>
+      <footer class="footer">
+        <div class="container">
+          <p class="pull-right">
+            <a href="#">Back to top</a>
+          </p>
+          <p>此文档通过doxmate生成。主题借鉴Bootstrap API文档风格，注解基于<a href="https://github.com/visionmedia/dox">Dox</a>。欢迎关注doxmate作者<a href="http://weibo.com/shyvo" target="_blank">@朴灵</a></p>
+          <ul class="footer-links">
+            <li><a href="https://github.com/visionmedia/dox">Dox主页</a></li>
+            <li><a href="http://html5ify.com/doxmate">Doxmate主页</a></li>
+            <li><a href="https://github.com/JacksonTian/doxmate/issues?state=open">提交bug</a></li>
+          </ul>
+      </div>
+    </footer>
+    <script>
+      $(function() {
+        $('pre').addClass('prettyprint');
+        $('td pre').removeClass('prettyprint');
+        prettyPrint();
+        var $window = $(window);
+        $('.bs-docs-sidenav').affix({
+          offset: {
+            top: function () {
+              return $window.width() <= 980 ? 290 : 210
+            },
+            bottom: 270
+          }
+        });
+        $(".content").find('h1, h2, h3, h4, h5, h6').each(function () {
+          var node = $(this);
+          if (!node.attr("id")) {
+            node.attr("id", "index_" + node.text());
+          }
+          node.css("paddingTop", 40);
+        });
+      });
+    </script>
+  
+  </body>
+</html>
