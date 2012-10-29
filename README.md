@@ -5,9 +5,6 @@
 ## 实现思路
 通过扫描目录中的js文件，正则表达式匹配require调用，提取出项目中require到的所有模块。并且排除掉Node的原生模块、文件模块，提取出依赖的第三方模块。并自动从NPM服务器上查看最新的版本以提供一个推荐的依赖列表。  
 
-## 求谁来帮忙实现
-哥太忙了。求对Node感兴趣的人来帮忙实现下。可以玩玩分析文本文件。项目完成后，**奖励两本图灵社区的书**。
-
 ##安装
 
 ```
@@ -24,20 +21,21 @@ dependparser -i <project path>
 
 ```
 var dp = require("dependparser");
-//第一个参数为项目路径，最后跟上斜线。
-//第二个参数为回调方法，其第一个参数是最后获取的依赖的对象，第二个参数如果出错则是一个Error实例。
-//第三个参数是配置参数，目前支持blackList（黑名单数组），showError(请求错误是否在控制台显示错误信息）
-dp.process(process.cwd().replace(/test$/,""), {
-  blackList: [
-    "test.js"
-  ],
-  showError: true
-}, function (err, result) {
-  // result带有两个属性，expect和actual。分别表示期望的模块列表和实际的模块列表
-  if (!error) {
-    console.log(result)
-  } else {
-    console.log(error)
-  }
+/**
+ * 第一个参数是项目路径，第二个参数是配置项（黑名单，checkVersion），第三个参数是回调
+ */
+dp.process(process.cwd().replace(/demo$/,""), {
+    blackList:[
+       // "*demo.js"
+    ],
+    checkVersion:true
+}, function (error,result) {
+    if(error){
+        //code=1 是致命错误，code=2 是请求错误，不致命。
+         console.log(error.code);
+        console.log(error.message);
+    }else{
+        console.log(result); 
+    }
 });
 ```
