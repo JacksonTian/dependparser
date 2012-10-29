@@ -54,6 +54,7 @@ if (!program.input) {
         console.log((_.difference(expectKeys, actualKeys).join(',') + " are missed").green);
       }
     } else {
+      // Fixme: 这里有bug，当长度相等的时候，依赖项可能并不匹配
       console.log("Congratulations! The dependencies are matched.".green);
     }
   });
