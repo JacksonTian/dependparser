@@ -41,21 +41,23 @@ if (!program.input) {
     }
     var actualKeys = Object.keys(result.actual);
     var expectKeys = Object.keys(result.expect);
-    // TODO: 得判断checkVersion的情况
-    if (actualKeys.length !== expectKeys.length) {
+    var unnecessary = _.difference(actualKeys, expectKeys);
+    var missed = _.difference(expectKeys, actualKeys);
+    if ((unnecessary.length + missed.length) === 0) {
+      console.log("Congratulations! The dependencies are matched.".green);
+    } else {
+      // TODO: 得判断checkVersion的情况
       console.warn("Dependencies aren't matched".red);
       console.log("Expect:");
-      console.log(expectKeys.join(','));
+      console.log(expectKeys.join(', '));
       console.log("Actual:");
-      console.log(actualKeys.join(','));
-      if (actualKeys.length > expectKeys.length) {
-        console.log((_.difference(actualKeys, expectKeys).join(',') + " are unnecessary").green);
-      } else {
-        console.log((_.difference(expectKeys, actualKeys).join(',') + " are missed").green);
+      console.log(actualKeys.join(', '));
+      if (unnecessary.length) {
+        console.log((unnecessary.join(',') + " are unnecessary").green);
       }
-    } else {
-      // Fixme: 这里有bug，当长度相等的时候，依赖项可能并不匹配
-      console.log("Congratulations! The dependencies are matched.".green);
+      if (missed.length) {
+        console.log((missed.join(',') + " are missed").green);
+      }
     }
   });
 }
