@@ -10,6 +10,6 @@ dp.process(process.cwd().replace(/demo$/,""), {
     console.log(error.code);
     console.log(error.message);
   }else{
-    console.log(result); 
+    console.log(result);
   }
 });

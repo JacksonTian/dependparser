@@ -5,7 +5,6 @@
  */
 
 var program = require('commander'),
-  fs = require('fs'),
   path = require('path'),
   colors = require('colors'),
   _ = require('underscore'),
@@ -14,14 +13,13 @@ var program = require('commander'),
 // options
 program
   .version(parser.version)
-  .option('-c, --checkVersion', 'Check the version')
   .option('-i, --input <folder>', 'where is the package.');
 
 // examples
 program.on('--help', function(){
   console.log('  Examples:');
   console.log('');
-  console.log('    $ dependparser -i <folder> [-c]');
+  console.log('    $ dependparser -i <folder>');
   console.log('');
 });
 
@@ -29,12 +27,11 @@ program.on('--help', function(){
 program.parse(process.argv);
 
 if (!program.input) {
-  console.log('$ dependparser -i <folder> [-c]');
+  console.log('$ dependparser -i <folder>');
 } else {
   // process stdin
-  var config = {
-    checkVersion: program.checkVersion
-  };
+  var config = {};
+
   parser.process(path.resolve(program.input), config, function (err, result) {
     if (err) {
       throw err;
@@ -50,13 +47,17 @@ if (!program.input) {
       console.warn("Dependencies aren't matched".red);
       console.log("Expect:");
       console.log(expectKeys.join(', '));
+      console.log('');
+      console.log('');
       console.log("Actual:");
       console.log(actualKeys.join(', '));
+      console.log('');
+      console.log('');
       if (unnecessary.length) {
-        console.log((unnecessary.join(',') + " are unnecessary").green);
+        console.log((unnecessary.join(', ') + " are unnecessary").green);
       }
       if (missed.length) {
-        console.log((missed.join(',') + " are missed").green);
+        console.log((missed.join(', ') + " are missed").green);
       }
     }
   });
