@@ -4,35 +4,22 @@
  * Module dependencies.
  */
 
-var program = require('commander'),
-  path = require('path'),
+var argv = require('minimist')(process.argv.slice(2));
+
+var path = require('path'),
   colors = require('colors'),
   _ = require('underscore'),
   parser = require('../');
 
-// options
-program
-  .version(parser.version)
-  .option('-i, --input <folder>', 'where is the package.');
+var input = argv._[0];
 
-// examples
-program.on('--help', function(){
-  console.log('  Examples:');
-  console.log('');
-  console.log('    $ dependparser -i <folder>');
-  console.log('');
-});
-
-// parse argv
-program.parse(process.argv);
-
-if (!program.input) {
-  console.log('$ dependparser -i <folder>');
+if (!input) {
+  console.log('$ dependparser <folder>');
 } else {
   // process stdin
   var config = {};
 
-  parser.process(path.resolve(program.input), config, function (err, result) {
+  parser.process(path.resolve(input), config, function (err, result) {
     if (err) {
       throw err;
     }

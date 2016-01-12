@@ -4,7 +4,8 @@
   "description": "项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。",
   "main": "lib/index.js",
   "keywords": [
-    "depend", "parser"
+    "depend",
+    "parser"
   ],
   "scripts": {
     "test": "node ./test/test.js"
@@ -18,10 +19,10 @@
   },
   "author": "yutou",
   "license": "MIT",
-  "dependencies":{
+  "dependencies": {
+    "colors": "0.6.2",
     "iwalk": "0.0.5",
-    "underscore": "1.7.0",
-    "commander": "2.3.0",
-    "colors": "0.6.2"
+    "minimist": "~1.1.1",
+    "underscore": "1.7.0"
   }
 }
