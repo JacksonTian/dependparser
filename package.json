@@ -25,5 +25,6 @@
     "kitx": "1.0.0",
     "minimist": "~1.1.1",
     "underscore": "1.7.0"
-  }
+  },
+  "files": ["lib", "bin"]
 }
