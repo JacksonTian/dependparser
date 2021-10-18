@@ -25,7 +25,8 @@ $ dependparser <project dir path>
 const dp = require('dependparser');
 
 /**
- * 第一个参数是项目路径，第二个参数是配置项（黑名单，checkVersion），第三个参数是回调
+ * 第一个参数是项目路径
+ * 第二个参数是配置项（黑名单，checkVersion）
  */
 const result = await parser.process(path.resolve(input), config);
 const expectKeys = Object.keys(result.expect);
