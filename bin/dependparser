@@ -4,14 +4,11 @@
  * Module dependencies.
  */
 
-const argv = require('minimist')(process.argv.slice(2));
-
 const path = require('path');
-const colors = require('colors');
-const _ = require('underscore');
+const colors = require('colors/safe');
 const parser = require('../');
 
-var input = argv._[0];
+const [input] = process.argv.slice(2);
 
 if (!input) {
   console.log('$ dependparser <folder>');
@@ -21,32 +18,78 @@ if (!input) {
 // process stdin
 var config = {};
 
-parser.process(path.resolve(input), config, function (err, result) {
-  if (err) {
-    throw err;
-  }
-  var actualKeys = Object.keys(result.actual);
-  var expectKeys = Object.keys(result.expect);
-  var unnecessary = _.difference(actualKeys, expectKeys);
-  var missed = _.difference(expectKeys, actualKeys);
+function difference(a, b) {
+  // a, b, c          => expected
+  //    b, c, d, e    => actual
+  // a is unnecessary
+  // d, e is missed
+  // b, c is matched
+  const all = {};
+  a.forEach((key) => {
+    if (!all[key]) {
+      all[key] = 0;
+    }
+
+    all[key] = all[key] + 2;
+  });
+
+  b.forEach((key) => {
+    if (!all[key]) {
+      all[key] = 0;
+    }
+
+    all[key] = all[key] + 1;
+  });
+
+  const unnecessary = [];
+  const matched = [];
+  const missed = [];
+  Object.keys(all).forEach((key) => {
+    if (all[key] === 3) {
+      matched.push(key);
+    }
+    if (all[key] === 2) {
+      unnecessary.push(key);
+    }
+
+    if (all[key] === 1) {
+      missed.push(key);
+    }
+  });
+
+  return { unnecessary, matched, missed };
+}
+
+async function main() {
+  const result = await parser.process(path.resolve(input), config);
+  const expectKeys = Object.keys(result.expect);
+  const actualKeys = Object.keys(result.actual);
+  const {unnecessary, missed } = difference(expectKeys, actualKeys);
   if ((unnecessary.length + missed.length) === 0) {
-    console.log("Congratulations! The dependencies are matched.".green);
-  } else {
-    // TODO: 得判断checkVersion的情况
-    console.warn("Dependencies aren't matched".red);
-    console.log("Expect:");
-    console.log(expectKeys.join(', '));
-    console.log('');
-    console.log('');
-    console.log("Actual:");
-    console.log(actualKeys.join(', '));
-    console.log('');
-    console.log('');
-    if (unnecessary.length) {
-      console.log((unnecessary.join(', ') + " are unnecessary").green);
-    }
-    if (missed.length) {
-      console.log((missed.join(', ') + " are missed").green);
-    }
+    console.log(colors.green("Congratulations! The dependencies are matched."));
+    return;
   }
+
+  // TODO: 得判断checkVersion的情况
+  console.warn(colors.red("Dependencies aren't matched"));
+  console.log("Expect:");
+  console.log(expectKeys.join(', '));
+  console.log('');
+  console.log('');
+  console.log("Actual:");
+  console.log(actualKeys.join(', '));
+  console.log('');
+  console.log('');
+
+  if (unnecessary.length) {
+    console.log(colors.yellow(unnecessary.join(', ') + " are unnecessary"));
+  }
+
+  if (missed.length) {
+    console.log(colors.yellow(missed.join(', ') + " are missed"));
+  }
+}
+
+main().catch((err) => {
+  console.log(err.stack);
 });

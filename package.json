@@ -7,24 +7,19 @@
     "depend",
     "parser"
   ],
-  "scripts": {
-    "test": "node ./test/test.js"
-  },
+  "scripts": {},
   "bin": {
     "dependparser": "./bin/dependparser"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/xinyu198736/dependparser"
   },
   "author": "yutou",
   "license": "MIT",
   "dependencies": {
-    "colors": "0.6.2",
+    "colors": "^1.4.0",
     "iwalk": "0.0.5",
-    "kitx": "1.0.0",
-    "minimist": "~1.1.1",
-    "underscore": "1.13.1"
+    "kitx": "1.0.0"
   },
-  "files": ["lib", "bin"]
+  "files": [
+    "lib",
+    "bin"
+  ]
 }
