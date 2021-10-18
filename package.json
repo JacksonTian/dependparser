@@ -1,6 +1,6 @@
 {
   "name": "dependparser",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "项目的目标是创建一个小程序，自动帮用户分析出一个项目中所require的模块，以帮助用户编写出精确的package.json文件的dependencies和devDependencies属性。",
   "main": "lib/index.js",
   "keywords": [
@@ -9,9 +9,8 @@
   ],
   "scripts": {},
   "bin": {
-    "dependparser": "./bin/dependparser"
+    "dependparser": "bin/dependparser"
   },
-  "author": "yutou",
   "license": "MIT",
   "dependencies": {
     "colors": "^1.4.0",
@@ -21,5 +20,18 @@
   "files": [
     "lib",
     "bin"
-  ]
+  ],
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JacksonTian/dependparser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JacksonTian/dependparser/issues"
+  },
+  "homepage": "https://github.com/JacksonTian/dependparser#readme",
+  "author": "Jackson Tian"
 }
