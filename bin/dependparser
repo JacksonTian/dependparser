@@ -21,8 +21,8 @@ var config = {};
 function difference(a, b) {
   // a, b, c          => expected
   //    b, c, d, e    => actual
-  // a is unnecessary
-  // d, e is missed
+  // a is missed
+  // d, e is unnecessary
   // b, c is matched
   const all = {};
   a.forEach((key) => {
@@ -48,12 +48,13 @@ function difference(a, b) {
     if (all[key] === 3) {
       matched.push(key);
     }
+
     if (all[key] === 2) {
-      unnecessary.push(key);
+      missed.push(key);
     }
 
     if (all[key] === 1) {
-      missed.push(key);
+      unnecessary.push(key);
     }
   });
 
