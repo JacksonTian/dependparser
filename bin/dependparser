@@ -1,18 +1,19 @@
 #!/usr/bin/env node
+'use strict';
 
 /**
  * Module dependencies.
  */
 
 const path = require('path');
-const colors = require('colors/safe');
+const chalk = require('chalk');
 const parser = require('../');
 
 const [input] = process.argv.slice(2);
 
 if (!input) {
   console.log('$ dependparser <folder>');
-  return;
+  process.exit(0);
 }
 
 // process stdin
@@ -67,27 +68,27 @@ async function main() {
   const actualKeys = Object.keys(result.actual);
   const {unnecessary, missed } = difference(expectKeys, actualKeys);
   if ((unnecessary.length + missed.length) === 0) {
-    console.log(colors.green("Congratulations! The dependencies are matched."));
+    console.log(chalk.green('Congratulations! The dependencies are matched.'));
     return;
   }
 
   // TODO: 得判断checkVersion的情况
-  console.warn(colors.red("Dependencies aren't matched"));
-  console.log("Expect:");
+  console.warn(chalk.red('Dependencies aren\'t matched'));
+  console.log('Expect:');
   console.log(expectKeys.join(', '));
   console.log('');
   console.log('');
-  console.log("Actual:");
+  console.log('Actual:');
   console.log(actualKeys.join(', '));
   console.log('');
   console.log('');
 
   if (unnecessary.length) {
-    console.log(colors.yellow(unnecessary.join(', ') + " are unnecessary"));
+    console.log(chalk.yellow(unnecessary.join(', ') + ' are unnecessary'));
   }
 
   if (missed.length) {
-    console.log(colors.yellow(missed.join(', ') + " are missed"));
+    console.log(chalk.yellow(missed.join(', ') + ' are missed'));
   }
 }
 
